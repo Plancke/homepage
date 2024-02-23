@@ -232,7 +232,13 @@ You can show the docker stats by clicking the status indicator but this can also
 ```yaml
 - Example Service:
   ...
-  showStats: true
+  stats:
+    mode: normal|slim
+    show: 
+      cpu: false
+      memory: false
+      rx: false
+      tx: false
 ```
 
 Also see the settings for [show docker stats](settings.md#show-docker-stats).

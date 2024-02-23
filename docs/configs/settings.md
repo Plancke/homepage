@@ -425,7 +425,13 @@ By default, logs are sent both to `stdout` and to a file at the path specified. 
 You can show all docker stats expanded in `settings.yaml`:
 
 ```yaml
-showStats: true
+stats:
+  mode: normal|slim
+  show:
+    cpu: false
+    memory: false
+    rx: false
+    tx: false
 ```
 
 or per-service (`services.yaml`) with:
@@ -433,7 +439,13 @@ or per-service (`services.yaml`) with:
 ```yaml
 - Example Service:
     ...
-    showStats: true
+    stats:
+      mode: normal|slim
+      show:
+        cpu: false
+        memory: false
+        rx: false
+        tx: false
 ```
 
 If you have both set the per-service settings take precedence.

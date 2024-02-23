@@ -15,9 +15,22 @@ import ResolvedIcon from "components/resolvedicon";
 export default function Item({ service, group, useEqualHeights }) {
   const hasLink = service.href && service.href !== "#";
   const { settings } = useContext(SettingsContext);
-  const showStats = service.showStats === false ? false : settings.showStats;
+  const legacyShowStats = settings.showStats ?? false;
+  const statsToggles = {
+    mode: "normal",
+    ...settings.stats,
+    ...service.stats,
+    show: {
+      cpu: legacyShowStats,
+      memory: legacyShowStats,
+      rx: legacyShowStats,
+      tx: legacyShowStats,
+      ...settings.stats?.show,
+      ...service.stats?.show
+    },
+  };
   const statusStyle = service.statusStyle !== undefined ? service.statusStyle : settings.statusStyle;
-  const [statsOpen, setStatsOpen] = useState(service.showStats);
+  const [statsOpen, setStatsOpen] = useState(statsToggles.show);
   const [statsClosing, setStatsClosing] = useState(false);
 
   // set stats to closed after 300ms
@@ -84,8 +97,8 @@ export default function Item({ service, group, useEqualHeights }) {
           )}
 
           <div
-            className={`absolute top-0 right-0 flex flex-row justify-end ${
-              statusStyle === "dot" ? "gap-0" : "gap-2 mr-2"
+            className={`absolute top-0 right-0 flex flex-row justify-end 
+              ${statusStyle === "dot" ? "gap-0" : "gap-2 mr-2"
             } z-30 service-tags`}
           >
             {service.ping && (
@@ -102,6 +115,15 @@ export default function Item({ service, group, useEqualHeights }) {
               </div>
             )}
 
+            {service.container && service.server && statsToggles.mode === "slim" && (
+              <button
+                type="button"
+                className="flex-shrink-0 flex items-center justify-center cursor-pointer service-tag service-container-stats"
+              >
+                <Docker service={service} statsToggles={statsToggles} />
+                <span className="sr-only">View container stats</span>
+              </button>
+            )}
             {service.container && (
               <button
                 type="button"
@@ -125,26 +147,26 @@ export default function Item({ service, group, useEqualHeights }) {
           </div>
         </div>
 
-        {service.container && service.server && (
+        {service.container && service.server && statsToggles.mode === "normal" && (
           <div
             className={classNames(
-              showStats || (statsOpen && !statsClosing) ? "max-h-[110px] opacity-100" : " max-h-[0] opacity-0",
+              statsToggles.show || (statsOpen && !statsClosing) ? "max-h-[110px] opacity-100" : " max-h-[0] opacity-0",
               "w-full overflow-hidden transition-all duration-300 ease-in-out service-stats",
             )}
           >
-            {(showStats || statsOpen) && (
-              <Docker service={{ widget: { container: service.container, server: service.server } }} />
+            {(statsToggles.show || statsOpen) && (
+              <Docker service={service} statsToggles={statsToggles} />
             )}
           </div>
         )}
         {service.app && (
           <div
             className={classNames(
-              showStats || (statsOpen && !statsClosing) ? "max-h-[55px] opacity-100" : " max-h-[0] opacity-0",
+              statsToggles.show || (statsOpen && !statsClosing) ? "max-h-[55px] opacity-100" : " max-h-[0] opacity-0",
               "w-full overflow-hidden transition-all duration-300 ease-in-out service-stats",
             )}
           >
-            {(showStats || statsOpen) && (
+            {(statsToggles.show || statsOpen) && (
               <Kubernetes
                 service={{
                   widget: { namespace: service.namespace, app: service.app, podSelector: service.podSelector },
