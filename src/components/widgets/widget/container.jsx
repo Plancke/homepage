@@ -23,8 +23,8 @@ export function getAllClasses(options, additionalClassNames = "") {
   }
 
   let widgetAlignedClasses = "flex flex-col max-w:full sm:basis-auto self-center grow-0 flex-wrap";
-  if (options?.style?.isRightAligned) {
-    widgetAlignedClasses = "flex flex-col justify-center";
+  if (options?.style?.align === "right") {
+    widgetAlignedClasses = "flex flex-col justify-center first:ml-auto ml-2 mr-2 ";
   }
 
   return classNames(widgetAlignedClasses, additionalClassNames);

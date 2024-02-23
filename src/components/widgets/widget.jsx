@@ -18,13 +18,19 @@ const widgetMappings = {
   stocks: dynamic(() => import("components/widgets/stocks/stocks")),
 };
 
+const defaultRightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime", "bookmark"];
+
+export function isDefaultRightAligned(type) {
+  return defaultRightAlignedWidgets.includes(type);
+}
+
 export default function Widget({ widget, style }) {
   const InfoWidget = widgetMappings[widget.type];
 
   if (InfoWidget) {
     return (
       <ErrorBoundary>
-        <InfoWidget options={{ ...widget.options, style }} />
+        <InfoWidget options={{ ...widget.options, style: { ...style, ...widget.options?.style } }} />
       </ErrorBoundary>
     );
   }
