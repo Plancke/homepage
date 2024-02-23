@@ -40,6 +40,9 @@ Info widgets are used to display information in the header, often about your sys
     latitude: 36.66
     longitude: -117.51
     cache: 5
+    style:
+      # not guaranteed to be supported for every info widget, see src/components/widgets/widget.jsx for defaults
+      align: right|left 
 ```
 
 More detail on configuring info widgets can be found in the [Info Widgets Config](../configs/info-widgets.md) section.

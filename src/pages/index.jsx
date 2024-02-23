@@ -5,6 +5,7 @@ import ErrorBoundary from "components/errorboundry";
 import QuickLaunch from "components/quicklaunch";
 import ServicesGroup from "components/services/group";
 import Tab, { slugifyAndEncode } from "components/tab";
+import Widget, { isDefaultRightAligned as isDefaultRightAlignedWidget } from "components/widgets/widget";
 import Revalidate from "components/toggles/revalidate";
 import Widget from "components/widgets/widget";
 import { useTranslation } from "next-i18next";
@@ -38,8 +39,6 @@ const ColorToggle = dynamic(() => import("components/toggles/color"), {
 const Version = dynamic(() => import("components/version"), {
   ssr: false,
 });
-
-const rightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime"];
 
 // Normalize language codes so older config values like zh-CN still point to Crowdin-provided ones
 const LANGUAGE_ALIASES = {
@@ -463,12 +462,12 @@ function Home({ initialSettings }) {
             {widgets && (
               <>
                 {widgets
-                  .filter((widget) => !rightAlignedWidgets.includes(widget.type))
+                  .filter((widget) => widget.options?.style?.align !== "right" ?? !isDefaultRightAlignedWidget(widget.type))
                   .map((widget, i) => (
                     <Widget
                       key={i}
                       widget={widget}
-                      style={{ header: headerStyle, isRightAligned: false, cardBlur: settings.cardBlur }}
+                      style={{ header: headerStyle, align: "left", cardBlur: settings.cardBlur }}
                     />
                   ))}
 
@@ -480,12 +479,12 @@ function Home({ initialSettings }) {
                   )}
                 >
                   {widgets
-                    .filter((widget) => rightAlignedWidgets.includes(widget.type))
+                    .filter((widget) => widget.options?.style?.align === "right" ?? isDefaultRightAlignedWidget(widget.type))
                     .map((widget, i) => (
                       <Widget
                         key={i}
                         widget={widget}
-                        style={{ header: headerStyle, isRightAligned: true, cardBlur: settings.cardBlur }}
+                        style={{ header: headerStyle, align: "right", cardBlur: settings.cardBlur }}
                       />
                     ))}
                 </div>
