@@ -16,6 +16,7 @@ const widgetMappings = {
   longhorn: dynamic(() => import("components/widgets/longhorn/longhorn")),
   kubernetes: dynamic(() => import("components/widgets/kubernetes/kubernetes")),
   stocks: dynamic(() => import("components/widgets/stocks/stocks")),
+  bookmark: dynamic(() => import("components/widgets/bookmark/bookmark")),
 };
 
 const defaultRightAlignedWidgets = ["weatherapi", "openweathermap", "weather", "openmeteo", "search", "datetime", "bookmark"];
